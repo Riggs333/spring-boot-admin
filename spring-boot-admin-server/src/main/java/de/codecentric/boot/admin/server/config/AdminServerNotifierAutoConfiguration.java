@@ -29,6 +29,7 @@ import de.codecentric.boot.admin.server.notify.OpsGenieNotifier;
 import de.codecentric.boot.admin.server.notify.PagerdutyNotifier;
 import de.codecentric.boot.admin.server.notify.SlackNotifier;
 import de.codecentric.boot.admin.server.notify.TelegramNotifier;
+import de.codecentric.boot.admin.server.notify.ThreemaNotifier;
 import de.codecentric.boot.admin.server.notify.filter.FilteringNotifier;
 import de.codecentric.boot.admin.server.notify.filter.web.NotificationFilterController;
 
@@ -51,6 +52,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -219,6 +221,18 @@ public class AdminServerNotifierAutoConfiguration {
         @ConfigurationProperties("spring.boot.admin.notify.telegram")
         public TelegramNotifier telegramNotifier(InstanceRepository repository) {
             return new TelegramNotifier(repository);
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = "spring.boot.admin.notify.threema", name = "secret")
+    @AutoConfigureBefore({NotifierTriggerConfiguration.class, CompositeNotifierConfiguration.class})
+    public static class ThreemaNotifierConfiguration {
+        @Bean
+        @ConditionalOnMissingBean
+        @ConfigurationProperties("spring.boot.admin.notify.threema")
+        public ThreemaNotifier threemaNotifier(InstanceRepository repository) {
+            return new ThreemaNotifier(repository);
         }
     }
 }
