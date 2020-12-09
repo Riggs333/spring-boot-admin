@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.codecentric.boot.admin.server.notify;
 
 import de.codecentric.boot.admin.server.domain.entities.Instance;
@@ -26,6 +42,11 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ThreemaNotifierTest {
 
+    private static final URI THREEMA_API_GATEWAY_URI = URI.create("https://msgapi.threema.ch/send_simple");
+
+    private final Instance instance = Instance.create(InstanceId.of("-id-"))
+            .register(Registration.create("Threema", "http://health").build());
+
     @InjectMocks
     private ThreemaNotifier threemaNotifier;
 
@@ -34,11 +55,6 @@ public class ThreemaNotifierTest {
 
     @Mock
     private InstanceRepository instanceRepository;
-
-    private static final URI THREEMA_API_GATEWAY_URI = URI.create("https://msgapi.threema.ch/send_simple");
-
-    private final Instance instance = Instance.create(InstanceId.of("-id-"))
-            .register(Registration.create("Threema", "http://health").build());
 
     @Before
     public void setup() {
@@ -49,13 +65,14 @@ public class ThreemaNotifierTest {
 
     @Test
     public void givenStatusChangedEventExpectNotificationToThreemaApi() {
-        InstanceStatusChangedEvent event = new InstanceStatusChangedEvent(instance.getId(), instance.getVersion(), StatusInfo.ofUp());
+        InstanceStatusChangedEvent event =
+                new InstanceStatusChangedEvent(instance.getId(), instance.getVersion(), StatusInfo.ofUp());
         threemaNotifier.notifyThreema(event, instance);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("from", "*SENDERID");
         map.add("text", "Threema -id- is UP.");
         map.add("to", "SomeOne");

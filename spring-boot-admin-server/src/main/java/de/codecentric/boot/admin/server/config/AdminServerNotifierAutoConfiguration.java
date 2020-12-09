@@ -52,6 +52,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -231,6 +232,7 @@ public class AdminServerNotifierAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConfigurationProperties("spring.boot.admin.notify.threema")
+        @Validated
         public ThreemaNotifier threemaNotifier(InstanceRepository repository) {
             return new ThreemaNotifier(repository);
         }

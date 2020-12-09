@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.codecentric.boot.admin.server.notify;
 
 import de.codecentric.boot.admin.server.domain.entities.Instance;
@@ -10,22 +26,27 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Objects;
 
+@Validated
 public class ThreemaNotifier extends AbstractStatusChangeNotifier {
 
     private static final URI THREEMA_API_GATEWAY = URI.create("https://msgapi.threema.ch/send_simple");
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;//TODO
 
-    //TODO @NotBlank ?
+    @NotBlank
+    @NotNull
     private String senderID;
 
-    //TODO @NotBlank?
+    @NotBlank
     private String apiSecret;
 
     //TODO @NotBlank?

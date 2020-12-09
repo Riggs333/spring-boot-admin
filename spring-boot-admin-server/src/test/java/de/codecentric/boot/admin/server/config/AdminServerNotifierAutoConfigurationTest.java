@@ -29,6 +29,7 @@ import de.codecentric.boot.admin.server.notify.SlackNotifier;
 import de.codecentric.boot.admin.server.notify.TelegramNotifier;
 import de.codecentric.boot.admin.server.notify.TestNotifier;
 
+import de.codecentric.boot.admin.server.notify.ThreemaNotifier;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -110,6 +111,12 @@ public class AdminServerNotifierAutoConfigurationTest {
     public void test_telegram() {
         load(null, "spring.boot.admin.notify.telegram.auth-token:123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11");
         assertThat(context.getBean(Notifier.class)).isInstanceOf(TelegramNotifier.class);
+    }
+
+    @Test
+    public void test_threema() {
+        load(null, "spring.boot.admin.notify.threema.secret:foobar");
+        assertThat(context.getBean(ThreemaNotifier.class)).isInstanceOf(ThreemaNotifier.class);
     }
 
     @Test
